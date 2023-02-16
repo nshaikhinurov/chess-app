@@ -2,55 +2,55 @@
 // https://github.com/emotion-js/emotion/issues/2752
 import cx from "classnames";
 import React from "react";
-import { cellSize } from "../consts";
-import { Cell } from "../models/Cell";
+import { squareSize } from "../consts";
+import { Square } from "../models/Square";
 
-interface CellComponentProps {
-  cell: Cell;
+interface SquareComponentProps {
+  square: Square;
   selected: boolean;
-  onClick: (cell: Cell) => void;
+  onClick: (square: Square) => void;
 }
 
-const CellComponent: React.FC<CellComponentProps> = ({
-  cell,
+const SquareComponent: React.FC<SquareComponentProps> = ({
+  square,
   selected,
   onClick,
 }) => {
   return (
     <div
-      className={cx(cell.color, {
+      className={cx(square.color, {
         selected,
-        hoverable: !selected && cell.piece,
+        hoverable: !selected && square.piece,
       })}
-      css={cellStyles}
-      onClick={() => onClick(cell)}
+      css={squareStyles}
+      onClick={() => onClick(square)}
     >
-      {cell.available && (
+      {square.available && (
         <div
-          className={cx({ taking: cell.piece })}
+          className={cx({ taking: square.piece })}
           css={availableDotStyles}
         ></div>
       )}
-      {cell.piece && (
+      {square.piece && (
         <img
           css={pieceStyles}
-          src={cell.piece.image}
-          alt={`${cell.piece.color} ${cell.piece.name}`}
+          src={square.piece.image}
+          alt={`${square.piece.color} ${square.piece.name}`}
         />
       )}
     </div>
   );
 };
 
-export default CellComponent;
+export default SquareComponent;
 
-const cellSizeStyles = {
-  width: `${cellSize}px`,
-  height: `${cellSize}px`,
+const squareSizeStyles = {
+  width: `${squareSize}px`,
+  height: `${squareSize}px`,
 };
 
-const cellStyles = {
-  ...cellSizeStyles,
+const squareStyles = {
+  ...squareSizeStyles,
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
@@ -75,19 +75,19 @@ const cellStyles = {
 } as const;
 
 const pieceStyles = {
-  ...cellSizeStyles,
+  ...squareSizeStyles,
   position: "relative",
 } as const;
 
 const availableDotStyles = {
   position: "absolute",
-  width: `${0.33 * cellSize}px`,
-  height: `${0.33 * cellSize}px`,
+  width: `${0.33 * squareSize}px`,
+  height: `${0.33 * squareSize}px`,
   backgroundColor: "rgba(0,0,0,0.1)",
   borderRadius: "50%",
   overflow: "hidden",
   "&.taking": {
-    ...cellSizeStyles,
+    ...squareSizeStyles,
     backgroundColor: "transparent",
     boxShadow: "inset 0px 0px 0px 6px rgba(0,0,0,0.1)",
   },

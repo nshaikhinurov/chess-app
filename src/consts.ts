@@ -1,1 +1,1 @@
-export const cellSize = 64;
+export const squareSize = 64;

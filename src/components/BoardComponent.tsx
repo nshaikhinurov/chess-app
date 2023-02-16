@@ -3,10 +3,10 @@
 
 import React from "react";
 import { useEffect } from "react";
-import { cellSize } from "../consts";
+import { squareSize } from "../consts";
 import { Board } from "../models/Board";
-import { Cell } from "../models/Cell";
-import CellComponent from "./CellComponent";
+import { Square } from "../models/Square";
+import SquareComponent from "./SquareComponent";
 
 interface BoardComponentProps {
   board: Board;
@@ -14,27 +14,33 @@ interface BoardComponentProps {
 }
 
 const BoardComponent: React.FC<BoardComponentProps> = ({ board, setBoard }) => {
-  const [selectedCell, setSelectedCell] = React.useState<null | Cell>(null);
+  const [selectedSquare, setSelectedSquare] = React.useState<null | Square>(
+    null
+  );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(highlightAvailableCells, [selectedCell]);
+  useEffect(highlightAvailableSquares, [selectedSquare]);
 
-  function handleCellClick(cell: Cell) {
-    if (
-      selectedCell &&
-      selectedCell !== cell &&
-      selectedCell.piece?.canMoveTo(cell)
-    ) {
-      selectedCell.movePiece(cell);
-      setSelectedCell(null);
+  function handleSquareClick(square: Square) {
+    if (!selectedSquare) {
+      setSelectedSquare(square);
+      return;
+    }
+
+    if (selectedSquare === square) {
+      setSelectedSquare(null);
+      return;
+    }
+
+    if (selectedSquare !== square && selectedSquare.piece?.canMoveTo(square)) {
+      selectedSquare.movePiece(square);
+      setSelectedSquare(null);
       updateBoard();
-    } else {
-      setSelectedCell(cell);
     }
   }
 
-  function highlightAvailableCells() {
-    board.highlightAvailableCells(selectedCell);
+  function highlightAvailableSquares() {
+    board.highlightAvailableSquares(selectedSquare);
     updateBoard();
   }
 
@@ -45,14 +51,14 @@ const BoardComponent: React.FC<BoardComponentProps> = ({ board, setBoard }) => {
 
   return (
     <div css={boardStyles}>
-      {board.cells.map((row, index) => (
+      {board.squares.map((row, index) => (
         <React.Fragment key={index}>
-          {row.map((cell, index) => (
-            <CellComponent
-              key={cell.id}
-              cell={cell}
-              selected={selectedCell?.id === cell.id}
-              onClick={handleCellClick}
+          {row.map((square, index) => (
+            <SquareComponent
+              key={square.id}
+              square={square}
+              selected={selectedSquare?.id === square.id}
+              onClick={handleSquareClick}
             />
           ))}
         </React.Fragment>
@@ -66,8 +72,8 @@ export default BoardComponent;
 const boardStyles = {
   display: "flex",
   flexWrap: "wrap",
-  width: `${8 * cellSize}px`,
-  height: `${8 * cellSize}px`,
+  width: `${8 * squareSize}px`,
+  height: `${8 * squareSize}px`,
   borderRadius: "3px",
   overflow: "hidden",
 } as const;
