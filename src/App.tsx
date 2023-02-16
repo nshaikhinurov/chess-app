@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+/** @jsxImportSource @emotion/react */
+// https://github.com/emotion-js/emotion/issues/2752
+import { css } from "@emotion/react";
+import React, { useEffect } from "react";
+import BoardComponent from "./components/BoardComponent";
+import { Board } from "./models/Board";
 
 function App() {
+  const [board, setBoard] = React.useState<Board>(new Board());
+
+  useEffect(restart, []);
+
+  function restart() {
+    const newBoard = new Board();
+    newBoard.initCells();
+    newBoard.placePieces();
+    setBoard(newBoard);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div css={styles}>
+      <BoardComponent board={board} setBoard={setBoard} />
     </div>
   );
 }
 
 export default App;
+
+const styles = css`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #312e2b;
+`;
