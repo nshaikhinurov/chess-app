@@ -38,5 +38,9 @@ export class Piece {
     return true;
   }
 
-  moveTo(target: Square) {}
+  moveTo(target: Square) {
+    this.square.board.enPassantSquare = null;
+    this.square.piece = null;
+    target.setPiece(this);
+  }
 }

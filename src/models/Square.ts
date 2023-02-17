@@ -90,19 +90,21 @@ export class Square {
       return false;
     }
 
+    // Check if there are no pieces between the current square and the target square
+    const dx = targetSquare.x > this.x ? 1 : -1;
+    const dy = targetSquare.y > this.y ? 1 : -1;
+
+    for (let i = 1; i < xDiff; i++) {
+      if (!this.board.getSquare(this.x + i * dx, this.y + i * dy).isEmpty()) {
+        return false;
+      }
+    }
+
     return true;
   }
 
   setPiece(piece: Piece) {
     this.piece = piece;
     this.piece.square = this;
-  }
-
-  movePiece(targetSquare: Square) {
-    if (this.piece && this.piece.canMoveTo(targetSquare)) {
-      this.piece.moveTo(targetSquare);
-      targetSquare.setPiece(this.piece);
-      this.piece = null;
-    }
   }
 }

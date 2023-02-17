@@ -18,22 +18,43 @@ const BoardComponent: React.FC<BoardComponentProps> = ({ board, setBoard }) => {
     null
   );
 
+  if (board.enPassantSquare) {
+    console.log(
+      "🚀 ~ file: BoardComponent.tsx:24 ~ board.enPassantSquare",
+      board.enPassantSquare
+    );
+  }
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(highlightAvailableSquares, [selectedSquare]);
 
   function handleSquareClick(square: Square) {
+    // Select piece
     if (!selectedSquare) {
-      setSelectedSquare(square);
+      if (square.piece) {
+        setSelectedSquare(square);
+      }
       return;
     }
 
+    // Deselect
     if (selectedSquare === square) {
       setSelectedSquare(null);
       return;
     }
 
+    // Select different piece
+    if (
+      square !== selectedSquare &&
+      square.piece?.color === selectedSquare.piece?.color
+    ) {
+      setSelectedSquare(square);
+      return;
+    }
+
+    // Move selected piece
     if (selectedSquare !== square && selectedSquare.piece?.canMoveTo(square)) {
-      selectedSquare.movePiece(square);
+      selectedSquare.piece.moveTo(square);
       setSelectedSquare(null);
       updateBoard();
     }

@@ -9,6 +9,7 @@ import { Rook } from "./pieces/Rook";
 import * as R from "ramda";
 export class Board {
   squares: Square[][] = [];
+  enPassantSquare: Square | null = null;
 
   public initSquares() {
     this.squares = R.times(
@@ -90,6 +91,7 @@ export class Board {
   public getCopy(): Board {
     const newBoard = new Board();
     newBoard.squares = this.squares;
+    newBoard.enPassantSquare = this.enPassantSquare;
     return newBoard;
   }
 }

@@ -16,6 +16,9 @@ export class Knight extends Piece {
       return false;
     }
 
-    return true;
+    const xDiff = Math.abs(this.square.x - target.x);
+    const yDiff = Math.abs(this.square.y - target.y);
+
+    return (xDiff === 1 && yDiff === 2) || (yDiff === 1 && xDiff === 2);
   }
 }

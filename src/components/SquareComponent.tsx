@@ -18,19 +18,21 @@ const SquareComponent: React.FC<SquareComponentProps> = ({
 }) => {
   return (
     <div
-      className={cx(square.color, {
+      className={cx("square", square.color, {
         selected,
         hoverable: !selected && square.piece,
       })}
       css={squareStyles}
       onClick={() => onClick(square)}
     >
-      {square.available && (
-        <div
-          className={cx({ taking: square.piece })}
-          css={availableDotStyles}
-        ></div>
-      )}
+      <div
+        className={cx("dot", {
+          visible: square.available,
+          takable: square.piece,
+        })}
+        css={availableDotStyles}
+      ></div>
+
       {square.piece && (
         <img
           css={pieceStyles}
@@ -81,14 +83,26 @@ const pieceStyles = {
 
 const availableDotStyles = {
   position: "absolute",
-  width: `${0.33 * squareSize}px`,
-  height: `${0.33 * squareSize}px`,
-  backgroundColor: "rgba(0,0,0,0.1)",
+  width: 0,
+  height: 0,
   borderRadius: "50%",
   overflow: "hidden",
-  "&.taking": {
-    ...squareSizeStyles,
-    backgroundColor: "transparent",
-    boxShadow: "inset 0px 0px 0px 6px rgba(0,0,0,0.1)",
+  transition: "all 0.075s linear",
+
+  "&.visible": {
+    width: `${0.33 * squareSize}px`,
+    height: `${0.33 * squareSize}px`,
+    boxShadow: "inset 0px 0px 0px 30px rgba(0,0,0,0.1)",
+    ".square:hover &:not(.takable)": {
+      width: `${0.45 * squareSize}px`,
+      height: `${0.45 * squareSize}px`,
+    },
+    "&.takable": {
+      ...squareSizeStyles,
+      boxShadow: "inset 0px 0px 0px 6px rgba(0,0,0,0.1)",
+      ".square:hover &": {
+        boxShadow: "inset 0px 0px 0px 35px rgba(0,0,0,0.1)",
+      },
+    },
   },
 } as const;
