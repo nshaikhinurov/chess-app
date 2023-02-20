@@ -7,7 +7,7 @@ export class Square {
   readonly y: number;
   readonly color: Colors;
   board: Board;
-  id: number;
+  id: string;
   piece: Piece | null;
   available: boolean;
 
@@ -25,7 +25,7 @@ export class Square {
     piece: Piece | null;
   }) {
     this.board = board;
-    this.id = Math.random();
+    this.id = `${intToChar(x)}${8 - y}`;
     this.x = x;
     this.y = y;
     this.color = color;
@@ -103,8 +103,19 @@ export class Square {
     return true;
   }
 
+  isAttackedBy(color: Colors): boolean {
+    const opponentPieces = this.board.getPieces(color);
+    return opponentPieces.some((piece) => piece.canMoveTo(this));
+  }
+
   setPiece(piece: Piece) {
     this.piece = piece;
     this.piece.square = this;
   }
+}
+
+function intToChar(int: number): string {
+  const code = "a".charCodeAt(0);
+
+  return String.fromCharCode(code + int);
 }

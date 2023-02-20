@@ -1,13 +1,14 @@
 import { Square } from "../Square";
 import { Colors } from "../Colors";
 import { Piece, Pieces } from "./Piece";
-import blackKnight from "../../assets/images/bn.png";
-import whiteKnight from "../../assets/images/wn.png";
+import blackKnight from "../../assets/images/large/bn.png";
+import whiteKnight from "../../assets/images/large/wn.png";
 
 export class Knight extends Piece {
   constructor(color: Colors, square: Square) {
     super(color, square);
     this.name = Pieces.KNIGHT;
+    this.value = 3;
     this.image = this.color === Colors.WHITE ? whiteKnight : blackKnight;
   }
 

@@ -5,25 +5,26 @@ import React from "react";
 import { useEffect } from "react";
 import { squareSize } from "../consts";
 import { Board } from "../models/Board";
+import { Player } from "../models/Player";
 import { Square } from "../models/Square";
 import SquareComponent from "./SquareComponent";
-
+import { borderRadius } from "../consts";
 interface BoardComponentProps {
   board: Board;
   setBoard: React.Dispatch<React.SetStateAction<Board>>;
+  currentPlayer: Player | null;
+  changeCurrentPlayer: () => void;
 }
 
-const BoardComponent: React.FC<BoardComponentProps> = ({ board, setBoard }) => {
+const BoardComponent: React.FC<BoardComponentProps> = ({
+  board,
+  setBoard,
+  currentPlayer,
+  changeCurrentPlayer,
+}) => {
   const [selectedSquare, setSelectedSquare] = React.useState<null | Square>(
     null
   );
-
-  if (board.enPassantSquare) {
-    console.log(
-      "🚀 ~ file: BoardComponent.tsx:24 ~ board.enPassantSquare",
-      board.enPassantSquare
-    );
-  }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(highlightAvailableSquares, [selectedSquare]);
@@ -31,7 +32,7 @@ const BoardComponent: React.FC<BoardComponentProps> = ({ board, setBoard }) => {
   function handleSquareClick(square: Square) {
     // Select piece
     if (!selectedSquare) {
-      if (square.piece) {
+      if (square.piece && square.piece.color === currentPlayer?.color) {
         setSelectedSquare(square);
       }
       return;
@@ -57,6 +58,7 @@ const BoardComponent: React.FC<BoardComponentProps> = ({ board, setBoard }) => {
       selectedSquare.piece.moveTo(square);
       setSelectedSquare(null);
       updateBoard();
+      changeCurrentPlayer();
     }
   }
 
@@ -95,6 +97,6 @@ const boardStyles = {
   flexWrap: "wrap",
   width: `${8 * squareSize}px`,
   height: `${8 * squareSize}px`,
-  borderRadius: "3px",
+  borderRadius,
   overflow: "hidden",
 } as const;

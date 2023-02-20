@@ -1,8 +1,8 @@
 import { Square } from "../Square";
 import { Colors } from "../Colors";
 import { Piece, Pieces } from "./Piece";
-import blackKing from "../../assets/images/bk.png";
-import whiteKing from "../../assets/images/wk.png";
+import blackKing from "../../assets/images/large/bk.png";
+import whiteKing from "../../assets/images/large/wk.png";
 
 export class King extends Piece {
   constructor(color: Colors, square: Square) {
@@ -16,6 +16,9 @@ export class King extends Piece {
       return false;
     }
 
-    return true;
+    const xDiff = Math.abs(this.square.x - target.x);
+    const yDiff = Math.abs(this.square.y - target.y);
+
+    return xDiff <= 1 && yDiff <= 1;
   }
 }

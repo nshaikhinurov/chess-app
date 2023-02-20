@@ -17,18 +17,23 @@ export class Piece {
   image: typeof image | null;
   square: Square;
   name: Pieces;
+  value: number;
 
   constructor(color: Colors, square: Square) {
     this.id = Math.random();
     this.color = color;
     this.square = square;
     this.square.piece = this;
+    this.value = 0;
 
     this.image = null;
     this.name = Pieces.PAWN;
   }
 
   canMoveTo(target: Square): boolean {
+    if (target === this.square) {
+      return false;
+    }
     if (target.piece?.color === this.color) {
       return false;
     }
@@ -41,6 +46,9 @@ export class Piece {
   moveTo(target: Square) {
     this.square.board.enPassantSquare = null;
     this.square.piece = null;
+    if (target.piece) {
+      target.piece.square.board.addLostPiece(target.piece);
+    }
     target.setPiece(this);
   }
 }

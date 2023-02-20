@@ -2,7 +2,13 @@
 // https://github.com/emotion-js/emotion/issues/2752
 import cx from "classnames";
 import React from "react";
-import { squareSize } from "../consts";
+import {
+  blackSquareColor,
+  selectedBlackSquareColor,
+  selectedWiteSquareColor,
+  squareSize,
+  whiteSquareColor,
+} from "../consts";
 import { Square } from "../models/Square";
 
 interface SquareComponentProps {
@@ -25,10 +31,20 @@ const SquareComponent: React.FC<SquareComponentProps> = ({
       css={squareStyles}
       onClick={() => onClick(square)}
     >
+      {square.id[1] === "1" && (
+        <div className="file" css={squareIdStyles}>
+          {square.id[0]}
+        </div>
+      )}
+      {square.id[0] === "a" && (
+        <div className="rank" css={squareIdStyles}>
+          {square.id[1]}
+        </div>
+      )}
       <div
         className={cx("dot", {
           visible: square.available,
-          takable: square.piece,
+          capturable: square.piece,
         })}
         css={availableDotStyles}
       ></div>
@@ -51,23 +67,44 @@ const squareSizeStyles = {
   height: `${squareSize}px`,
 };
 
+const squareIdStyles = {
+  position: "absolute",
+  fontSize: "0.8em",
+  fontWeight: "bold",
+  ".square.white &": {
+    color: blackSquareColor,
+  },
+  ".square.black &": {
+    color: whiteSquareColor,
+  },
+  "&.rank": {
+    top: "0.2em",
+    left: "0.2em",
+  },
+  "&.file": {
+    bottom: "0.2em",
+    right: "0.2em",
+  },
+} as const;
+
 const squareStyles = {
   ...squareSizeStyles,
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  position: "relative",
 
   "&.white": {
-    backgroundColor: "#edeed1",
+    backgroundColor: whiteSquareColor,
     "&.selected": {
-      backgroundColor: "#F7F769",
+      backgroundColor: selectedWiteSquareColor,
     },
   },
 
   "&.black": {
-    backgroundColor: "#779952",
+    backgroundColor: blackSquareColor,
     "&.selected": {
-      backgroundColor: "#BCCD29",
+      backgroundColor: selectedBlackSquareColor,
     },
   },
 
@@ -93,11 +130,11 @@ const availableDotStyles = {
     width: `${0.33 * squareSize}px`,
     height: `${0.33 * squareSize}px`,
     boxShadow: "inset 0px 0px 0px 30px rgba(0,0,0,0.1)",
-    ".square:hover &:not(.takable)": {
+    ".square:hover &:not(.capturable)": {
       width: `${0.45 * squareSize}px`,
       height: `${0.45 * squareSize}px`,
     },
-    "&.takable": {
+    "&.capturable": {
       ...squareSizeStyles,
       boxShadow: "inset 0px 0px 0px 6px rgba(0,0,0,0.1)",
       ".square:hover &": {

@@ -7,7 +7,10 @@ import { Pawn } from "./pieces/Pawn";
 import { Queen } from "./pieces/Queen";
 import { Rook } from "./pieces/Rook";
 import * as R from "ramda";
+import { Piece, Pieces } from "./pieces/Piece";
 export class Board {
+  lostWhitePieces: Piece[] = [];
+  lostBlackPieces: Piece[] = [];
   squares: Square[][] = [];
   enPassantSquare: Square | null = null;
 
@@ -90,8 +93,43 @@ export class Board {
 
   public getCopy(): Board {
     const newBoard = new Board();
+
     newBoard.squares = this.squares;
     newBoard.enPassantSquare = this.enPassantSquare;
+    newBoard.lostWhitePieces = this.lostWhitePieces;
+    newBoard.lostBlackPieces = this.lostBlackPieces;
+
     return newBoard;
+  }
+
+  public addLostPiece(piece: Piece) {
+    if (piece.color === Colors.WHITE) {
+      this.lostWhitePieces.push(piece);
+    } else {
+      this.lostBlackPieces.push(piece);
+    }
+  }
+
+  public fakeLostPieces() {
+    this.squares
+      .flat()
+      .filter((square) => square.piece)
+      .map((square) => square.piece)
+      .forEach((piece) => {
+        if (piece && piece.name !== Pieces.KING /* && Math.random() > 0.5 */) {
+          if (piece.color === Colors.WHITE) {
+            this.lostWhitePieces.push(piece);
+          } else {
+            this.lostBlackPieces.push(piece);
+          }
+        }
+      });
+  }
+
+  public getPieces(color: Colors): Piece[] {
+    return this.squares
+      .flat()
+      .filter((square) => square.piece && square.piece.color === color)
+      .map((square) => square.piece as Piece);
   }
 }

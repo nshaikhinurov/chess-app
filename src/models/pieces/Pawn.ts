@@ -1,8 +1,8 @@
 import { Square } from "../Square";
 import { Colors } from "../Colors";
 import { Piece, Pieces } from "./Piece";
-import blackPawn from "../../assets/images/bp.png";
-import whitePawn from "../../assets/images/wp.png";
+import blackPawn from "../../assets/images/large/bp.png";
+import whitePawn from "../../assets/images/large/wp.png";
 
 export class Pawn extends Piece {
   moved: boolean = false;
@@ -10,6 +10,7 @@ export class Pawn extends Piece {
   constructor(color: Colors, square: Square) {
     super(color, square);
     this.name = Pieces.PAWN;
+    this.value = 1;
     this.image = this.color === Colors.WHITE ? whitePawn : blackPawn;
   }
 
@@ -63,9 +64,18 @@ export class Pawn extends Piece {
         target.x,
         this.square.y
       );
+
+      if (capturedPawnSquare.piece?.name !== Pieces.PAWN) {
+        throw new Error("uexpected error: pawn not present");
+      }
+
+      capturedPawnSquare.board.addLostPiece(capturedPawnSquare.piece);
       capturedPawnSquare.piece = null;
     }
 
+    if (target.piece) {
+      target.piece.square.board.addLostPiece(target.piece);
+    }
     target.setPiece(this);
     this.moved = true;
   }
