@@ -3,19 +3,16 @@
 import { css } from "@emotion/react";
 import React, { useEffect } from "react";
 import BoardComponent from "./components/BoardComponent";
-import PlayerInfoComponent from "./components/PlayerInfoComponent";
-import { Board } from "./models/Board";
-import { Colors } from "./models/Colors";
-import { Piece } from "./models/pieces/Piece";
-import { Player } from "./models/Player";
+import PlayerInfoComponent from "./components/PlayerInfo/PlayerInfoComponent";
+import { Board, Color, Piece, Player } from "./models";
 
 function App() {
   const [board, setBoard] = React.useState<Board>(new Board());
   const [whitePlayer, setWhitePlayer] = React.useState<Player>(
-    new Player(Colors.WHITE)
+    new Player(Color.WHITE)
   );
   const [blackPlayer, setBlackPlayer] = React.useState<Player>(
-    new Player(Colors.BLACK)
+    new Player(Color.BLACK)
   );
   const [currentPlayer, setCurrentPlayer] = React.useState<Player | null>(null);
 

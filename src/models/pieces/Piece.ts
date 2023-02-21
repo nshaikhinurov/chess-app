@@ -1,8 +1,8 @@
-import { Colors } from "../Colors";
+import { Color } from "../Color";
 import image from "../assets/bb.png";
 import { Square } from "../Square";
 
-export enum Pieces {
+export enum PieceName {
   PAWN = "pawn",
   KNIGHT = "knight",
   BISHOP = "bishop",
@@ -13,13 +13,13 @@ export enum Pieces {
 
 export class Piece {
   id: number;
-  color: Colors;
+  color: Color;
   image: typeof image | null;
   square: Square;
-  name: Pieces;
+  name: PieceName;
   value: number;
 
-  constructor(color: Colors, square: Square) {
+  constructor(color: Color, square: Square) {
     this.id = Math.random();
     this.color = color;
     this.square = square;
@@ -27,7 +27,7 @@ export class Piece {
     this.value = 0;
 
     this.image = null;
-    this.name = Pieces.PAWN;
+    this.name = PieceName.PAWN;
   }
 
   canMoveTo(target: Square): boolean {
@@ -37,7 +37,7 @@ export class Piece {
     if (target.piece?.color === this.color) {
       return false;
     }
-    if (target.piece?.name === Pieces.KING) {
+    if (target.piece?.name === PieceName.KING) {
       return false;
     }
     return true;

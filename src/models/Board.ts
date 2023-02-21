@@ -1,5 +1,5 @@
 import { Square } from "./Square";
-import { Colors } from "./Colors";
+import { Color } from "./Color";
 import { Bishop } from "./pieces/Bishop";
 import { King } from "./pieces/King";
 import { Knight } from "./pieces/Knight";
@@ -7,7 +7,7 @@ import { Pawn } from "./pieces/Pawn";
 import { Queen } from "./pieces/Queen";
 import { Rook } from "./pieces/Rook";
 import * as R from "ramda";
-import { Piece, Pieces } from "./pieces/Piece";
+import { Piece, PieceName } from "./pieces/Piece";
 export class Board {
   lostWhitePieces: Piece[] = [];
   lostBlackPieces: Piece[] = [];
@@ -23,7 +23,7 @@ export class Board {
               board: this,
               x: col,
               y: row,
-              color: (row + col) % 2 === 0 ? Colors.WHITE : Colors.BLACK,
+              color: (row + col) % 2 === 0 ? Color.WHITE : Color.BLACK,
               piece: null,
             }),
           8
@@ -38,40 +38,40 @@ export class Board {
 
   private addPawns() {
     for (let i = 0; i < 8; i++) {
-      new Pawn(Colors.WHITE, this.getSquare(i, 6));
-      new Pawn(Colors.BLACK, this.getSquare(i, 1));
+      new Pawn(Color.WHITE, this.getSquare(i, 6));
+      new Pawn(Color.BLACK, this.getSquare(i, 1));
     }
   }
 
   private addKnights() {
-    new Knight(Colors.WHITE, this.getSquare(1, 7));
-    new Knight(Colors.WHITE, this.getSquare(6, 7));
-    new Knight(Colors.BLACK, this.getSquare(6, 0));
-    new Knight(Colors.BLACK, this.getSquare(1, 0));
+    new Knight(Color.WHITE, this.getSquare(1, 7));
+    new Knight(Color.WHITE, this.getSquare(6, 7));
+    new Knight(Color.BLACK, this.getSquare(6, 0));
+    new Knight(Color.BLACK, this.getSquare(1, 0));
   }
 
   private addBishops() {
-    new Bishop(Colors.WHITE, this.getSquare(2, 7));
-    new Bishop(Colors.WHITE, this.getSquare(5, 7));
-    new Bishop(Colors.BLACK, this.getSquare(5, 0));
-    new Bishop(Colors.BLACK, this.getSquare(2, 0));
+    new Bishop(Color.WHITE, this.getSquare(2, 7));
+    new Bishop(Color.WHITE, this.getSquare(5, 7));
+    new Bishop(Color.BLACK, this.getSquare(5, 0));
+    new Bishop(Color.BLACK, this.getSquare(2, 0));
   }
 
   private addRooks() {
-    new Rook(Colors.WHITE, this.getSquare(0, 7));
-    new Rook(Colors.WHITE, this.getSquare(7, 7));
-    new Rook(Colors.BLACK, this.getSquare(7, 0));
-    new Rook(Colors.BLACK, this.getSquare(0, 0));
+    new Rook(Color.WHITE, this.getSquare(0, 7));
+    new Rook(Color.WHITE, this.getSquare(7, 7));
+    new Rook(Color.BLACK, this.getSquare(7, 0));
+    new Rook(Color.BLACK, this.getSquare(0, 0));
   }
 
   private addQueens() {
-    new Queen(Colors.WHITE, this.getSquare(3, 7));
-    new Queen(Colors.BLACK, this.getSquare(3, 0));
+    new Queen(Color.WHITE, this.getSquare(3, 7));
+    new Queen(Color.BLACK, this.getSquare(3, 0));
   }
 
   private addKings() {
-    new King(Colors.WHITE, this.getSquare(4, 7));
-    new King(Colors.BLACK, this.getSquare(4, 0));
+    new King(Color.WHITE, this.getSquare(4, 7));
+    new King(Color.BLACK, this.getSquare(4, 0));
   }
 
   public placePieces() {
@@ -103,7 +103,7 @@ export class Board {
   }
 
   public addLostPiece(piece: Piece) {
-    if (piece.color === Colors.WHITE) {
+    if (piece.color === Color.WHITE) {
       this.lostWhitePieces.push(piece);
     } else {
       this.lostBlackPieces.push(piece);
@@ -116,8 +116,8 @@ export class Board {
       .filter((square) => square.piece)
       .map((square) => square.piece)
       .forEach((piece) => {
-        if (piece && piece.name !== Pieces.KING /* && Math.random() > 0.5 */) {
-          if (piece.color === Colors.WHITE) {
+        if (piece && piece.name !== PieceName.KING && Math.random() > 0.5) {
+          if (piece.color === Color.WHITE) {
             this.lostWhitePieces.push(piece);
           } else {
             this.lostBlackPieces.push(piece);
@@ -126,7 +126,7 @@ export class Board {
       });
   }
 
-  public getPieces(color: Colors): Piece[] {
+  public getPieces(color: Color): Piece[] {
     return this.squares
       .flat()
       .filter((square) => square.piece && square.piece.color === color)

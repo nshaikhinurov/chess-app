@@ -1,14 +1,14 @@
 import { Square } from "../Square";
-import { Colors } from "../Colors";
-import { Piece, Pieces } from "./Piece";
+import { Color } from "../Color";
+import { Piece, PieceName } from "./Piece";
 import blackKing from "../../assets/images/large/bk.png";
 import whiteKing from "../../assets/images/large/wk.png";
 
 export class King extends Piece {
-  constructor(color: Colors, square: Square) {
+  constructor(color: Color, square: Square) {
     super(color, square);
-    this.name = Pieces.KING;
-    this.image = this.color === Colors.WHITE ? whiteKing : blackKing;
+    this.name = PieceName.KING;
+    this.image = this.color === Color.WHITE ? whiteKing : blackKing;
   }
 
   canMoveTo(target: Square): boolean {

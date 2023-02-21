@@ -1,17 +1,17 @@
 import { Square } from "../Square";
-import { Colors } from "../Colors";
-import { Piece, Pieces } from "./Piece";
+import { Color } from "../Color";
+import { Piece, PieceName } from "./Piece";
 import blackPawn from "../../assets/images/large/bp.png";
 import whitePawn from "../../assets/images/large/wp.png";
 
 export class Pawn extends Piece {
   moved: boolean = false;
 
-  constructor(color: Colors, square: Square) {
+  constructor(color: Color, square: Square) {
     super(color, square);
-    this.name = Pieces.PAWN;
+    this.name = PieceName.PAWN;
     this.value = 1;
-    this.image = this.color === Colors.WHITE ? whitePawn : blackPawn;
+    this.image = this.color === Color.WHITE ? whitePawn : blackPawn;
   }
 
   canMoveTo(target: Square): boolean {
@@ -19,7 +19,7 @@ export class Pawn extends Piece {
       return false;
     }
 
-    const forwardStep = this.color === Colors.BLACK ? 1 : -1;
+    const forwardStep = this.color === Color.BLACK ? 1 : -1;
     const isAvailableToAdvanceTo = (target: Square): boolean => {
       return (
         target.isEmpty() &&
@@ -55,7 +55,7 @@ export class Pawn extends Piece {
     if (advancedTwoSquares) {
       this.square.board.enPassantSquare = this.square.board.getSquare(
         this.square.x,
-        target.y + (this.color === Colors.BLACK ? -1 : 1)
+        target.y + (this.color === Color.BLACK ? -1 : 1)
       );
     }
 
@@ -65,7 +65,7 @@ export class Pawn extends Piece {
         this.square.y
       );
 
-      if (capturedPawnSquare.piece?.name !== Pieces.PAWN) {
+      if (capturedPawnSquare.piece?.name !== PieceName.PAWN) {
         throw new Error("uexpected error: pawn not present");
       }
 

@@ -1,11 +1,11 @@
 import { Board } from "./Board";
-import { Colors } from "./Colors";
+import { Color } from "./Color";
 import { Piece } from "./pieces/Piece";
 import * as R from "ramda";
 export class Square {
   readonly x: number;
   readonly y: number;
-  readonly color: Colors;
+  readonly color: Color;
   board: Board;
   id: string;
   piece: Piece | null;
@@ -21,7 +21,7 @@ export class Square {
     board: Board;
     x: number;
     y: number;
-    color: Colors;
+    color: Color;
     piece: Piece | null;
   }) {
     this.board = board;
@@ -103,7 +103,7 @@ export class Square {
     return true;
   }
 
-  isAttackedBy(color: Colors): boolean {
+  isAttackedBy(color: Color): boolean {
     const opponentPieces = this.board.getPieces(color);
     return opponentPieces.some((piece) => piece.canMoveTo(this));
   }

@@ -1,9 +1,9 @@
-import { Colors } from "./Colors";
+import { Color } from "./Color";
 
 export class Player {
-  color: Colors;
+  color: Color;
 
-  constructor(color: Colors) {
+  constructor(color: Color) {
     this.color = color;
   }
 }

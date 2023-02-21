@@ -1,15 +1,15 @@
 import { Square } from "../Square";
-import { Colors } from "../Colors";
-import { Piece, Pieces } from "./Piece";
+import { Color } from "../Color";
+import { Piece, PieceName } from "./Piece";
 import blackQueen from "../../assets/images/large/bq.png";
 import whiteQueen from "../../assets/images/large/wq.png";
 
 export class Queen extends Piece {
-  constructor(color: Colors, square: Square) {
+  constructor(color: Color, square: Square) {
     super(color, square);
-    this.name = Pieces.QUEEN;
+    this.name = PieceName.QUEEN;
     this.value = 9;
-    this.image = this.color === Colors.WHITE ? whiteQueen : blackQueen;
+    this.image = this.color === Color.WHITE ? whiteQueen : blackQueen;
   }
 
   canMoveTo(target: Square): boolean {
