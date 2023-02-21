@@ -6,6 +6,7 @@ import { Player, Color, Piece } from "src/models";
 import PlayerPicture from "./PlayerPicture";
 import CapturedPieces from "./CapturedPieces";
 import { blockHeight } from "src/consts";
+import Timer from "./Timer";
 
 interface PlayerInfoComponentProps {
   player: Player;
@@ -24,8 +25,16 @@ const PlayerInfoComponent: React.FC<PlayerInfoComponentProps> = ({
     <div css={playerStyles}>
       <PlayerPicture isCurrentPlayer={isCurrentPlayer} player={player} />
       <div css={playerInfoStyles}>
-        <h3>{`${player.color === Color.WHITE ? "White" : "Black"} player`}</h3>
-        <CapturedPieces capturedPieces={capturedPieces} advantage={advantage} />
+        <div css={{ flex: "1 1 0" }}>
+          <h3>{`${
+            player.color === Color.WHITE ? "White" : "Black"
+          } player`}</h3>
+          <CapturedPieces
+            capturedPieces={capturedPieces}
+            advantage={advantage}
+          />
+        </div>
+        <Timer isActive={isCurrentPlayer} />
       </div>
     </div>
   );
@@ -47,4 +56,5 @@ const playerStyles = {
 
 const playerInfoStyles = {
   width: "100%",
+  display: "flex",
 } as const;

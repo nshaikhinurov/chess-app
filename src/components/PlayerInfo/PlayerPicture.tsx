@@ -2,8 +2,8 @@
 // https://github.com/emotion-js/emotion/issues/2752import React from "react";
 
 import { Player, Color } from "src/models";
-import whiteKingImg from "src/assets/images/large/wk.png";
-import blackKingImg from "src/assets/images/large/bk.png";
+import whiteKingImg from "src/assets/images/wk.png";
+import blackKingImg from "src/assets/images/bk.png";
 import cx from "classnames";
 import { borderRadius, selectedWiteSquareColor, blockHeight } from "src/consts";
 

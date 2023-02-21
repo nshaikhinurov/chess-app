@@ -1,8 +1,8 @@
 import { Square } from "../Square";
 import { Color } from "../Color";
 import { Piece, PieceName } from "./Piece";
-import blackKnight from "../../assets/images/large/bn.png";
-import whiteKnight from "../../assets/images/large/wn.png";
+import blackKnight from "src/assets/images/bn.png";
+import whiteKnight from "src/assets/images/wn.png";
 
 export class Knight extends Piece {
   constructor(color: Color, square: Square) {

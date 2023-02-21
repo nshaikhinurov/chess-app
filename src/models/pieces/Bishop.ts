@@ -1,8 +1,8 @@
 import { Square } from "../Square";
 import { Color } from "../Color";
 import { Piece, PieceName } from "./Piece";
-import blackBishop from "../../assets/images/large/bb.png";
-import whiteBishop from "../../assets/images/large/wb.png";
+import blackBishop from "src/assets/images/bb.png";
+import whiteBishop from "src/assets/images/wb.png";
 
 export class Bishop extends Piece {
   constructor(color: Color, square: Square) {

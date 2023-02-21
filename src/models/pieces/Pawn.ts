@@ -1,8 +1,8 @@
 import { Square } from "../Square";
 import { Color } from "../Color";
 import { Piece, PieceName } from "./Piece";
-import blackPawn from "../../assets/images/large/bp.png";
-import whitePawn from "../../assets/images/large/wp.png";
+import blackPawn from "src/assets/images/bp.png";
+import whitePawn from "src/assets/images/wp.png";
 
 export class Pawn extends Piece {
   moved: boolean = false;

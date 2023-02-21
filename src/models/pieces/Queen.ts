@@ -1,8 +1,8 @@
 import { Square } from "../Square";
 import { Color } from "../Color";
 import { Piece, PieceName } from "./Piece";
-import blackQueen from "../../assets/images/large/bq.png";
-import whiteQueen from "../../assets/images/large/wq.png";
+import blackQueen from "src/assets/images/bq.png";
+import whiteQueen from "src/assets/images/wq.png";
 
 export class Queen extends Piece {
   constructor(color: Color, square: Square) {

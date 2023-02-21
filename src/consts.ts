@@ -1,3 +1,4 @@
+export const backgroundColor = "#312e2b";
 export const squareSize = 64;
 export const borderRadius = 3;
 export const whiteSquareColor = "#edeed1";

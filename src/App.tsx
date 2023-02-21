@@ -4,6 +4,7 @@ import { css } from "@emotion/react";
 import React, { useEffect } from "react";
 import BoardComponent from "./components/BoardComponent";
 import PlayerInfoComponent from "./components/PlayerInfo/PlayerInfoComponent";
+import { backgroundColor } from "./consts";
 import { Board, Color, Piece, Player } from "./models";
 
 function App() {
@@ -88,7 +89,7 @@ const appLayoutStyles = css`
   justify-content: center;
   align-items: center;
 
-  background-color: #312e2b;
+  background-color: ${backgroundColor};
 `;
 
 const wrapperStyles = {
