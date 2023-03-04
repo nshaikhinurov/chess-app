@@ -5,10 +5,12 @@ import React, { useEffect } from "react";
 import BoardComponent from "./components/BoardComponent";
 import PlayerInfoComponent from "./components/PlayerInfo/PlayerInfoComponent";
 import { backgroundColor } from "./consts";
+import { BoardContext } from "./contexts/BoardProvider";
 import { Board, Color, Piece, Player } from "./models";
 
 function App() {
   const [board, setBoard] = React.useState<Board>(new Board());
+
   const [whitePlayer, setWhitePlayer] = React.useState<Player>(
     new Player(Color.WHITE)
   );
@@ -21,18 +23,38 @@ function App() {
   useEffect(restart, []);
 
   function restart() {
+    const newWhitePlayer = new Player(Color.WHITE);
+    const newBlackPlayer = new Player(Color.BLACK);
     const newBoard = new Board();
+
     newBoard.initSquares();
-    newBoard.placePieces();
+    newBoard.placePieces([newWhitePlayer, newBlackPlayer]);
     // newBoard.fakeLostPieces();
+
     setBoard(newBoard);
-    setCurrentPlayer(whitePlayer);
+    setWhitePlayer(newWhitePlayer);
+    setBlackPlayer(newBlackPlayer);
+    setCurrentPlayer(newWhitePlayer);
   }
 
-  function changeCurrentPlayer() {
+  function toggleCurrentPlayer() {
     setCurrentPlayer((currentPlayer) =>
       currentPlayer === whitePlayer ? blackPlayer : whitePlayer
     );
+  }
+
+  function onTimeout(player: Player) {
+    if (player === whitePlayer) {
+      setImmediate(() => {
+        alert("Black player wins!");
+      });
+    } else {
+      setImmediate(() => {
+        alert("White player wins!");
+      });
+    }
+
+    restart();
   }
 
   function getAdvantageOfWhite(
@@ -40,43 +62,49 @@ function App() {
     lostBlackPieces: Piece[]
   ): number {
     let advantage = 0;
+
     lostWhitePieces.forEach((piece) => {
       advantage -= piece.value;
     });
     lostBlackPieces.forEach((piece) => {
       advantage += piece.value;
     });
+
     return advantage;
   }
 
+  const advantageOfWhite = getAdvantageOfWhite(
+    whitePlayer.lostPieces,
+    blackPlayer.lostPieces
+  );
+
   return (
-    <div css={appLayoutStyles}>
-      <div css={wrapperStyles}>
-        <PlayerInfoComponent
-          player={blackPlayer}
-          isCurrentPlayer={blackPlayer === currentPlayer}
-          capturedPieces={board.lostWhitePieces}
-          advantage={
-            -getAdvantageOfWhite(board.lostWhitePieces, board.lostBlackPieces)
-          }
-        />
-        <BoardComponent
-          board={board}
-          setBoard={setBoard}
-          currentPlayer={currentPlayer}
-          changeCurrentPlayer={changeCurrentPlayer}
-        />
-        <PlayerInfoComponent
-          player={whitePlayer}
-          isCurrentPlayer={whitePlayer === currentPlayer}
-          capturedPieces={board.lostBlackPieces}
-          advantage={getAdvantageOfWhite(
-            board.lostWhitePieces,
-            board.lostBlackPieces
-          )}
-        />
+    <BoardContext.Provider value={{ board, setBoard }}>
+      <div css={appLayoutStyles}>
+        <div css={wrapperStyles}>
+          <PlayerInfoComponent
+            player={blackPlayer}
+            capturedPieces={whitePlayer.lostPieces}
+            isCurrentPlayer={currentPlayer === blackPlayer}
+            advantage={-advantageOfWhite}
+            onTimeout={onTimeout}
+          />
+          <BoardComponent
+            board={board}
+            setBoard={setBoard}
+            currentPlayer={currentPlayer}
+            changeCurrentPlayer={toggleCurrentPlayer}
+          />
+          <PlayerInfoComponent
+            player={whitePlayer}
+            capturedPieces={blackPlayer.lostPieces}
+            isCurrentPlayer={currentPlayer === whitePlayer}
+            advantage={advantageOfWhite}
+            onTimeout={onTimeout}
+          />
+        </div>
       </div>
-    </div>
+    </BoardContext.Provider>
   );
 }
 

@@ -3,10 +3,12 @@ import { Color } from "../Color";
 import { Piece, PieceName } from "./Piece";
 import blackQueen from "src/assets/images/bq.png";
 import whiteQueen from "src/assets/images/wq.png";
+import { Player } from "../Player";
 
 export class Queen extends Piece {
-  constructor(color: Color, square: Square) {
-    super(color, square);
+  constructor(color: Color, square: Square, player: Player) {
+    super(color, square, player);
+
     this.name = PieceName.QUEEN;
     this.value = 9;
     this.image = this.color === Color.WHITE ? whiteQueen : blackQueen;

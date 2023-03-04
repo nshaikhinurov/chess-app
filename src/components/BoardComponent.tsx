@@ -9,6 +9,7 @@ import { Player } from "../models/Player";
 import { Square } from "../models/Square";
 import SquareComponent from "./SquareComponent";
 import { borderRadius } from "../consts";
+import { useBoard } from "src/contexts/BoardProvider";
 interface BoardComponentProps {
   board: Board;
   setBoard: React.Dispatch<React.SetStateAction<Board>>;
@@ -17,11 +18,10 @@ interface BoardComponentProps {
 }
 
 const BoardComponent: React.FC<BoardComponentProps> = ({
-  board,
-  setBoard,
   currentPlayer,
   changeCurrentPlayer,
 }) => {
+  const { board, setBoard } = useBoard();
   const [selectedSquare, setSelectedSquare] = React.useState<null | Square>(
     null
   );
@@ -68,7 +68,7 @@ const BoardComponent: React.FC<BoardComponentProps> = ({
   }
 
   function updateBoard() {
-    const newBoard = board.getCopy();
+    const newBoard = board.clone();
     setBoard(newBoard);
   }
 

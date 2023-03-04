@@ -19,6 +19,7 @@ const PlayerPicture: React.FC<PlayerPictureProps> = ({
   return (
     <div css={playerIconStyles} className={cx({ active: isCurrentPlayer })}>
       <img
+        draggable="false"
         src={player.color === Color.WHITE ? whiteKingImg : blackKingImg}
         alt={`${player.color} player`}
       />

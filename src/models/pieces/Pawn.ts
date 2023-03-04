@@ -3,12 +3,13 @@ import { Color } from "../Color";
 import { Piece, PieceName } from "./Piece";
 import blackPawn from "src/assets/images/bp.png";
 import whitePawn from "src/assets/images/wp.png";
+import { Player } from "../Player";
 
 export class Pawn extends Piece {
   moved: boolean = false;
 
-  constructor(color: Color, square: Square) {
-    super(color, square);
+  constructor(color: Color, square: Square, player: Player) {
+    super(color, square, player);
     this.name = PieceName.PAWN;
     this.value = 1;
     this.image = this.color === Color.WHITE ? whitePawn : blackPawn;
@@ -47,34 +48,32 @@ export class Pawn extends Piece {
   }
 
   moveTo(target: Square): void {
-    const enPassantSquare = this.square.board.enPassantSquare;
-    this.square.board.enPassantSquare = null;
+    const board = this.square.board;
+    const enPassantSquare = board.enPassantSquare;
+    board.enPassantSquare = null;
     this.square.piece = null;
 
     const advancedTwoSquares = Math.abs(target.y - this.square.y) === 2;
     if (advancedTwoSquares) {
-      this.square.board.enPassantSquare = this.square.board.getSquare(
+      board.enPassantSquare = board.getSquare(
         this.square.x,
         target.y + (this.color === Color.BLACK ? -1 : 1)
       );
     }
 
     if (target === enPassantSquare) {
-      const capturedPawnSquare = this.square.board.getSquare(
-        target.x,
-        this.square.y
-      );
+      const capturedPawnSquare = board.getSquare(target.x, this.square.y);
 
       if (capturedPawnSquare.piece?.name !== PieceName.PAWN) {
         throw new Error("uexpected error: pawn not present");
       }
 
-      capturedPawnSquare.board.addLostPiece(capturedPawnSquare.piece);
+      capturedPawnSquare.piece.player.addLostPiece(capturedPawnSquare.piece);
       capturedPawnSquare.piece = null;
     }
 
     if (target.piece) {
-      target.piece.square.board.addLostPiece(target.piece);
+      target.piece.player.addLostPiece(target.piece);
     }
     target.setPiece(this);
     this.moved = true;

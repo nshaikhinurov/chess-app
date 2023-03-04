@@ -8,9 +8,8 @@ import { Queen } from "./pieces/Queen";
 import { Rook } from "./pieces/Rook";
 import * as R from "ramda";
 import { Piece, PieceName } from "./pieces/Piece";
+import { Player } from "./Player";
 export class Board {
-  lostWhitePieces: Piece[] = [];
-  lostBlackPieces: Piece[] = [];
   squares: Square[][] = [];
   enPassantSquare: Square | null = null;
 
@@ -36,51 +35,51 @@ export class Board {
     return this.squares[y][x];
   }
 
-  private addPawns() {
+  private addPawns([whitePlayer, blackPlayer]: [Player, Player]) {
     for (let i = 0; i < 8; i++) {
-      new Pawn(Color.WHITE, this.getSquare(i, 6));
-      new Pawn(Color.BLACK, this.getSquare(i, 1));
+      new Pawn(Color.WHITE, this.getSquare(i, 6), whitePlayer);
+      new Pawn(Color.BLACK, this.getSquare(i, 1), blackPlayer);
     }
   }
 
-  private addKnights() {
-    new Knight(Color.WHITE, this.getSquare(1, 7));
-    new Knight(Color.WHITE, this.getSquare(6, 7));
-    new Knight(Color.BLACK, this.getSquare(6, 0));
-    new Knight(Color.BLACK, this.getSquare(1, 0));
+  private addKnights([whitePlayer, blackPlayer]: [Player, Player]) {
+    new Knight(Color.WHITE, this.getSquare(1, 7), whitePlayer);
+    new Knight(Color.WHITE, this.getSquare(6, 7), whitePlayer);
+    new Knight(Color.BLACK, this.getSquare(6, 0), blackPlayer);
+    new Knight(Color.BLACK, this.getSquare(1, 0), blackPlayer);
   }
 
-  private addBishops() {
-    new Bishop(Color.WHITE, this.getSquare(2, 7));
-    new Bishop(Color.WHITE, this.getSquare(5, 7));
-    new Bishop(Color.BLACK, this.getSquare(5, 0));
-    new Bishop(Color.BLACK, this.getSquare(2, 0));
+  private addBishops([whitePlayer, blackPlayer]: [Player, Player]) {
+    new Bishop(Color.WHITE, this.getSquare(2, 7), whitePlayer);
+    new Bishop(Color.WHITE, this.getSquare(5, 7), whitePlayer);
+    new Bishop(Color.BLACK, this.getSquare(5, 0), blackPlayer);
+    new Bishop(Color.BLACK, this.getSquare(2, 0), blackPlayer);
   }
 
-  private addRooks() {
-    new Rook(Color.WHITE, this.getSquare(0, 7));
-    new Rook(Color.WHITE, this.getSquare(7, 7));
-    new Rook(Color.BLACK, this.getSquare(7, 0));
-    new Rook(Color.BLACK, this.getSquare(0, 0));
+  private addRooks([whitePlayer, blackPlayer]: [Player, Player]) {
+    new Rook(Color.WHITE, this.getSquare(0, 7), whitePlayer);
+    new Rook(Color.WHITE, this.getSquare(7, 7), whitePlayer);
+    new Rook(Color.BLACK, this.getSquare(7, 0), blackPlayer);
+    new Rook(Color.BLACK, this.getSquare(0, 0), blackPlayer);
   }
 
-  private addQueens() {
-    new Queen(Color.WHITE, this.getSquare(3, 7));
-    new Queen(Color.BLACK, this.getSquare(3, 0));
+  private addQueens([whitePlayer, blackPlayer]: [Player, Player]) {
+    new Queen(Color.WHITE, this.getSquare(3, 7), whitePlayer);
+    new Queen(Color.BLACK, this.getSquare(3, 0), blackPlayer);
   }
 
-  private addKings() {
-    new King(Color.WHITE, this.getSquare(4, 7));
-    new King(Color.BLACK, this.getSquare(4, 0));
+  private addKings([whitePlayer, blackPlayer]: [Player, Player]) {
+    new King(Color.WHITE, this.getSquare(4, 7), whitePlayer);
+    new King(Color.BLACK, this.getSquare(4, 0), blackPlayer);
   }
 
-  public placePieces() {
-    this.addPawns();
-    this.addKnights();
-    this.addBishops();
-    this.addRooks();
-    this.addQueens();
-    this.addKings();
+  public placePieces(players: [Player, Player]) {
+    this.addPawns(players);
+    this.addKnights(players);
+    this.addBishops(players);
+    this.addRooks(players);
+    this.addQueens(players);
+    this.addKings(players);
   }
 
   public highlightAvailableSquares(selectedSquare: Square | null) {
@@ -91,37 +90,23 @@ export class Board {
     });
   }
 
-  public getCopy(): Board {
+  public clone(): Board {
     const newBoard = new Board();
 
     newBoard.squares = this.squares;
     newBoard.enPassantSquare = this.enPassantSquare;
-    newBoard.lostWhitePieces = this.lostWhitePieces;
-    newBoard.lostBlackPieces = this.lostBlackPieces;
 
     return newBoard;
-  }
-
-  public addLostPiece(piece: Piece) {
-    if (piece.color === Color.WHITE) {
-      this.lostWhitePieces.push(piece);
-    } else {
-      this.lostBlackPieces.push(piece);
-    }
   }
 
   public fakeLostPieces() {
     this.squares
       .flat()
-      .filter((square) => square.piece)
       .map((square) => square.piece)
+      .filter(Boolean)
       .forEach((piece) => {
-        if (piece && piece.name !== PieceName.KING && Math.random() > 0.5) {
-          if (piece.color === Color.WHITE) {
-            this.lostWhitePieces.push(piece);
-          } else {
-            this.lostBlackPieces.push(piece);
-          }
+        if (piece.name !== PieceName.KING && Math.random() > 0.5) {
+          piece.player.addLostPiece(piece);
         }
       });
   }
@@ -129,7 +114,9 @@ export class Board {
   public getPieces(color: Color): Piece[] {
     return this.squares
       .flat()
-      .filter((square) => square.piece && square.piece.color === color)
-      .map((square) => square.piece as Piece);
+      .filter((square): square is Square & { piece: Piece } =>
+        Boolean(square.piece && square.piece.color === color)
+      )
+      .map((square) => square.piece);
   }
 }

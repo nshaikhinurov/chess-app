@@ -1,6 +1,7 @@
 import { Color } from "../Color";
 import image from "../assets/bb.png";
 import { Square } from "../Square";
+import { Player } from "../Player";
 
 export enum PieceName {
   PAWN = "pawn",
@@ -18,10 +19,13 @@ export class Piece {
   square: Square;
   name: PieceName;
   value: number;
+  player: Player;
+  moved: boolean = false;
 
-  constructor(color: Color, square: Square) {
+  constructor(color: Color, square: Square, player: Player) {
     this.id = Math.random();
     this.color = color;
+    this.player = player;
     this.square = square;
     this.square.piece = this;
     this.value = 0;
@@ -46,9 +50,12 @@ export class Piece {
   moveTo(target: Square) {
     this.square.board.enPassantSquare = null;
     this.square.piece = null;
+
     if (target.piece) {
-      target.piece.square.board.addLostPiece(target.piece);
+      target.piece.player.addLostPiece(target.piece);
     }
+
     target.setPiece(this);
+    this.moved = true;
   }
 }

@@ -51,6 +51,7 @@ const SquareComponent: React.FC<SquareComponentProps> = ({
 
       {square.piece && (
         <img
+          draggable="false"
           css={pieceStyles}
           src={square.piece.image}
           alt={`${square.piece.color} ${square.piece.name}`}
